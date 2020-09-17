@@ -11,7 +11,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { BaseController } from '@app/base.controller';
-import { UsuarioDto, UsuarioEditDto } from '@usuario/dtos/user.dto';
+import { UsuarioDto, UsuarioEditDto } from '@app/modules/usuario/dtos/usuario.dto';
 import { UsuarioService } from '@usuario/services/usuario.service';
 
 @Controller('/usuario')

@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators';
-import { UsuarioDto, UsuarioEditDto } from '@usuario/dtos/user.dto';
-import { Usuario } from '@usuario/models/user.entity';
+import { UsuarioDto, UsuarioEditDto } from '@app/modules/usuario/dtos/usuario.dto';
+import { Usuario } from '@app/modules/usuario/models/usuario.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsuarioService {
   constructor(
     @InjectRepository(Usuario)
-    private readonly userRepository: Repository<Usuario>,
+    private readonly usuarioRepository: Repository<Usuario>,
   ) {}
 
   async get(id: string) {
-    return await this.userRepository.findOne(id);
+    return await this.usuarioRepository.findOne(id);
   }
 
   async getByEmail(email: string) {
-    const usuario = await this.userRepository.findOne({
+    const usuario = await this.usuarioRepository.findOne({
       where: { email: email },
     });
     
@@ -29,7 +29,7 @@ export class UsuarioService {
       return null;
     }
 
-    return await this.userRepository.save(usuarioDto);
+    return await this.usuarioRepository.save(usuarioDto);
   }
 
   async update(usuario: UsuarioEditDto) {
@@ -37,7 +37,7 @@ export class UsuarioService {
       return null;
     }
 
-    return await this.userRepository.save(usuario);
+    return await this.usuarioRepository.save(usuario);
   }
 
   async delete(id: string) {
@@ -47,6 +47,12 @@ export class UsuarioService {
       return null;
     }
 
-    return await this.userRepository.softRemove(usuario);
+    return await this.usuarioRepository.softRemove(usuario);
+  }
+
+  async checkPassword(id: string, senha: string): Promise<boolean> {
+      const usuario = await this.usuarioRepository.findOne(id, {select: ["senha"]});
+
+      return usuario.senha == senha
   }
 }
