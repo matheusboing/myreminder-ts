@@ -9,22 +9,26 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
+  Request
 } from '@nestjs/common';
 import { BaseController } from '@app/base.controller';
 import { UsuarioDto, UsuarioEditDto } from '@app/modules/usuario/dtos/usuario.dto';
 import { UsuarioService } from '@usuario/services/usuario.service';
+import { JwtAuthGuard } from '@app/modules/auth/guards/jwtAuth.guard';
 
 @Controller('/usuario')
+@UseGuards(JwtAuthGuard)
 export class UsuarioController extends BaseController {
   constructor(
-    private readonly usuarioService: UsuarioService,
+    private readonly usuarioService: UsuarioService
   ) {
     super();
   }
 
-  @Get('/:id')
-  async get(@Param('id') id: string): Promise<any> {
-    const usuario = await this.usuarioService.get(id);
+  @Get()
+  async get(@Request() req: any): Promise<any> {
+    const usuario = req.user;
 
     if (!usuario) {
       throw this.notFound('Usuário não encontrado');
