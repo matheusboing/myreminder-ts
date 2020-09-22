@@ -11,10 +11,6 @@ export class UsuarioService {
     private readonly usuarioRepository: Repository<Usuario>,
   ) {}
 
-  async get(id: string) {
-    return await this.usuarioRepository.findOne(id);
-  }
-
   async getByEmail(email: string) {
     const usuario = await this.usuarioRepository.findOne({
       where: { email: email },
@@ -25,7 +21,6 @@ export class UsuarioService {
 
   async create(usuarioDto: UsuarioDto) {
     if (await this.getByEmail(usuarioDto.email)) {
-      console.log('Entrou no if');
       return null;
     }
 
@@ -33,15 +28,11 @@ export class UsuarioService {
   }
 
   async update(usuario: UsuarioEditDto) {
-    if (!(await this.get(usuario.id))) {
-      return null;
-    }
-
     return await this.usuarioRepository.save(usuario);
   }
 
   async delete(id: string) {
-    const usuario = await this.get(id);
+    const usuario = await this.usuarioRepository.findOne(id)
 
     if (!usuario) {
       return null;
