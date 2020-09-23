@@ -6,10 +6,7 @@ export class TarefaDto {
     titulo: string
 
     @IsBoolean()
-    conclusao: boolean
-    
-    @IsNotEmpty()
-    usuario: Usuario
+    conclusao: boolean;
 }
 
 export class TarefaEditDto extends TarefaDto {

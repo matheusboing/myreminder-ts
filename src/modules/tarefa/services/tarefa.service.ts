@@ -1,3 +1,4 @@
+import { Usuario } from "@app/modules/usuario/models/usuario.entity";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm/dist/common/typeorm.decorators";
 import { Repository } from "typeorm";
@@ -15,8 +16,8 @@ export class TarefaService {
         return await this.tarefaRepository.findOne(id, {relations: ["usuario"]})
     }
 
-    async create(tarefaDto: TarefaDto) {
-        return await this.tarefaRepository.save(tarefaDto);
+    async create(tarefaDto: TarefaDto, usuario: Usuario) {
+        return await this.tarefaRepository.save({...tarefaDto, usuario: usuario});
     }
 
     async update(tarefa: TarefaEditDto) {

@@ -1,10 +1,12 @@
 import { BaseController } from "@app/base.controller";
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
+import { JwtAuthGuard } from "@app/modules/auth/guards/jwtAuth.guard";
+import { Request, Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { TarefaDto, TarefaEditDto } from "../../dtos/tarefa.dto";
 import { TarefaService } from "../../services/tarefa.service";
 
 
 @Controller("tarefa")
+@UseGuards(JwtAuthGuard)
 export class TarefaController extends BaseController {
     constructor (
         private readonly tarefaService: TarefaService,
@@ -12,20 +14,20 @@ export class TarefaController extends BaseController {
         super()
     }
 
-    @Get("/:id")
-    async get(@Param("id") id: string): Promise<any> {
-        const tarefa = await this.tarefaService.get(id);
+     @Get("/:id")
+     async get(@Param("id") id: string): Promise<any> {
+         const tarefa = await this.tarefaService.get(id);
 
-        if(!tarefa) {
-            throw this.notFound("Tarefa não encontrada");
-        }
+         if(!tarefa) {
+             throw this.notFound("Tarefa não encontrada");
+         }
 
-        return tarefa;
-    }
+         return tarefa;
+     }
 
     @Post()
-    async post(@Body() body: TarefaDto) {
-        return await this.tarefaService.create(body);
+    async post(@Body() body: TarefaDto, @Request() req:any) {
+        return await this.tarefaService.create(body, req.user);
     }
 
     @Put("/:id")
